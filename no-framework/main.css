@@ -1,0 +1,8 @@
+body {
+    background-color: beige;
+    height: 100vh; /*vh is % of size of screen (100 means the entire height of the browser)*/
+}
+.container {
+    background-color: white;
+    width: 100vh;
+}
