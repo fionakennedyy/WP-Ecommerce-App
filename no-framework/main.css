@@ -1,8 +1,9 @@
 body {
-    background-color: beige;
+    background-color: aliceblue;
     height: 100vh; /*vh is % of size of screen (100 means the entire height of the browser)*/
 }
 .container {
+}
+.columns {
     background-color: white;
-    width: 100vh;
 }
