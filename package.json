@@ -1,0 +1,11 @@
+{
+  "name": "wp-ecommerce-app",
+  "version": "1.0.0",
+  "description": "Web Programming In-Class work (Ecommerce App)",
+  "author": "",
+  "license": "ISC",
+  "private": "true",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
