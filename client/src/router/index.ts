@@ -1,8 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, type NavigationGuardNext, type RouteLocationNormalized } from 'vue-router'
+//one way to import views
 import HomeView from '../views/HomeView.vue'
+import LoginView from '../views/LoginView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
@@ -10,14 +12,35 @@ const router = createRouter({
       component: HomeView
     },
     {
+      path: '/login',
+      name: 'login',
+      component: LoginView 
+    },
+    {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
-  ]
-})
+      // second way to import views
+      component: () => import('../views/AboutView.vue'),
+      beforeEnter: requireLogin,
+    },
+    {
+      path: '/products',
+      name: 'products',
+      component: () => import('../views/ProductList.vue'),
+      beforeEnter: requireLogin,
+    },
+  ],
+});
+
+function requireLogin(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) {
+
+  const session = getSession();
+  if(!session.user){
+    session.redirectUrl  = to.fullPath;
+    next('/login');
+  }else{
+    next();
+  }
+}
 
 export default router
