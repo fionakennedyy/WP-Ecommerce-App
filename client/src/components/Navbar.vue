@@ -2,8 +2,11 @@
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import LoginBadge from "./LoginBadge.vue";
+import FlyoutPanel from "./FlyoutPanel.vue";
+import ShoppingCart from "./ShoppingCart.vue";
 
 const isActive = ref(false);
+const isShoppingCartOpen = ref(false);
 </script>
 
 <template>
@@ -35,10 +38,7 @@ const isActive = ref(false);
     </div>
 
     <div
-      id="navbarBasicExample"
-      class="navbar-menu"
-      :class="{ 'is-active': isActive }"
-    >
+      id="navbarBasicExample" class="navbar-menu" :class="{ 'is-active': isActive }">
       <div class="navbar-start">
         <RouterLink class="navbar-item" to="/">Home</RouterLink>
         <RouterLink class="navbar-item" to="/about">About</RouterLink>
@@ -59,11 +59,21 @@ const isActive = ref(false);
 
       <div class="navbar-end">
         <div class="navbar-item">
+          <a class="button" :class="{ 'is-active': isShoppingCartOpen }" @click.prevent="isShoppingCartOpen = !isShoppingCartOpen">
+            <span class="icon">
+              <i class="fas fa-shopping-cart"></i>
+            </span>
+          </a>
+        </div>
+        <div class="navbar-item">
           <LoginBadge />
         </div>
       </div>
     </div>
   </nav>
+  <FlyoutPanel :class="{ 'is-active': isShoppingCartOpen }">
+    <ShoppingCart />
+  </FlyoutPanel>
 </template>
 
 <style scoped>

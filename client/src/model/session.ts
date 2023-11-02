@@ -1,4 +1,5 @@
 import { reactive } from "vue";
+import { useRouter } from "vue-router";
 import { type User, getUserByEmail } from "./users";
 
 const session = reactive({
@@ -10,15 +11,22 @@ export function getSession() {
   return session;
 }
 
-export function login(email: string, password: string): User | null {
-  const user = getUserByEmail(email);
-  if (user && user.password === password) {
-    session.user = user;
-    return user;
-  }
-  return null;
-}
-
-export function logout() {
-  session.user = null;
+// login system w login function and logout function
+export function useLogin() {
+  const router = useRouter();
+  return {
+    login(email: string, password: string): User | null {
+      const user = getUserByEmail(email);
+      if (user && user.password === password) {
+        session.user = user;
+        router.push(session.redirectUrl || "/");
+        return user;
+      }
+      return null;
+    },
+    logout() {
+      session.user = null;
+      router.push("/login")
+    },
+  };
 }
