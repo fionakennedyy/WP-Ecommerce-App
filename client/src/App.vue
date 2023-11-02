@@ -8,9 +8,9 @@ import Navbar from "./components/Navbar.vue";
     <Navbar />
   </header>
 
-  <!--<div class="container">
+  <div class="container">
     <RouterView />
-  </div>-->
+  </div>
 </template>
 
 <style scoped>
