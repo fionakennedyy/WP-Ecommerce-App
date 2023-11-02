@@ -23,4 +23,17 @@
 .flyout:hover, .flyout.is-active {
   right: 0;
 }
+
+@media (max-width: 640px) {
+    .flyout {
+      width: 100vw;
+      height: 50vh;  
+      left: 0;
+      right: 0;
+      top: 90vh;
+    }
+    .flyout:hover, .flyout.is-active {
+      top: 50vh;
+    }
+  }
 </style>

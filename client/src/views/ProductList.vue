@@ -55,6 +55,7 @@ setTimeout(() => {
 
   .price {
     font-size: 2em;
+    font-weight: bold;
     margin-right: .5rem;
   }
 </style>

@@ -8,7 +8,7 @@ const cart = getCart();
 <template>
     <div>
         <h1 class="subtitle">
-            Cart: {{ count() }} items, total: ${{ total() }}
+            Cart: {{ count }} items, total: ${{ total }}
         </h1>
 
         <div class="cart-items">
@@ -18,9 +18,12 @@ const cart = getCart();
                 <div class="item-details">
                     <h2 class="title is-5">{{ item.product.title }}</h2>
                     <p class="subtitle is-6">
-                        {{ item.product.price }} x
-                        {{ item.quantity }} = ${{ item.product.price * item.quantity }}
-                        <button class="button is-danger-is-small" @click="removeFromCart(item.product)">
+                        <select v-model="item.quantity">
+                            <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
+                        </select>
+                        x ${{ item.product.price }}
+                        = ${{ item.quantity }} = ${{ item.product.price * item.quantity }}
+                        <button class="button is-danger is-small" @click="removeFromCart(item.product)">
                             <div class="icon">
                                 <i class="fas fa-trash"></i>
                             </div>
@@ -34,5 +37,28 @@ const cart = getCart();
 </template>
 
 <style scoped>
+.cart {
+  padding: 1rem;
+  overflow-y: scroll;
+}
 
+.cart-items {
+  display: flex;
+  flex-direction: column;
+
+}
+.item {
+  display: flex;
+  flex-direction: row;
+  margin: .5rem;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  box-shadow: 0 0 1rem #0004;
+  overflow: hidden;
+}
+
+.item img {
+  width: 100px;
+  margin-right: .5rem;
+}
 </style>
