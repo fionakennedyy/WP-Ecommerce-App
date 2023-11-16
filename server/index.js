@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const productController = require('./controllers/products');
 
+const mongo = require('./models/mongo');
+
 const PORT = 3000;
 
 app

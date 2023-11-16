@@ -18,14 +18,14 @@ const data = require("../data/products.json");
 /**
  * @returns {Product[]} An array of products.
  */
-function getProducts() {
+function getAll() {
   return data.products;
 }
 
 /**
  * @param {number} id - The product's ID.
  */
-function getProductById(id) {
+function get(id) {
   return data.products.find((product) => product.id === id);
 }
 
@@ -42,6 +42,49 @@ function search(query) {
   });
 }
 
+//CRUD: create read update delete
+
+/**
+ * @param {Product} product - product to create
+ * @returns {Product} - created product
+ */
+function create(product) {
+  const newProduct = {
+    id: data.products.length + 1,
+    ...product,
+  };
+  data.products.push(newProduct);
+  return newProduct;
+}
+
+/**
+ * @param {number} id - product's id'
+ * @param {Product} product - product's data
+ * @returns {Product} - updated product
+ */
+function update(id, product) {
+  const index = data.products.findIndex((p) => p.id === product.id);
+  if(index === -1) {
+    throw new Error('Product not found');
+  }
+  data.products[index] = {
+    ...data.products[index],
+    ...product,
+  };
+  return data.products[index];
+}
+
+/**
+ * @param {number} id - product's id
+ */
+function remove(id) {
+  const index = data.products.findIndex(p => p.id === id);
+  if(index === -1) {
+    throw new Error('Product not found');
+  }
+  data.products.splice(index, 1);
+}
+
 module.exports = {
-  getProducts, getProductById, getProductsByCategory, search
+  getAll, get, getProductsByCategory, search, create, update, remove
 };

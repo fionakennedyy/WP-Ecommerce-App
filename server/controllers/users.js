@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAll, get, search, create, update, remove } = require('../models/products');
+const { getAll, get, search, create, update, remove } = require('../models/users');
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
@@ -17,29 +17,29 @@ router.get('/', (req, res, next) => {
 
 .get('/:id', (req, res, next) => {
 
-  const product = get(+req.params.id);
-  if(product) {
-    res.send( product );
+  const user = get(+req.params.id);
+  if(user) {
+    res.send( user );
   }else {
-    res.status(404).send({error: 'Product not found'});
+    res.status(404).send({error: 'User not found'});
   }
 
 })
 
 .post('/', (req, res, next) => {
   // body exists bc we use the json parser
-  const product = create(req.body);
-  res.send(product);
+  const user = create(req.body);
+  res.send(user);
 })
 
 .patch('/:id', (req, res, next) => {
-  const product = update(req.body);
-  res.send(product);
+  const user = update(req.body);
+  res.send(user);
 })
 
 .delete('/:id', (req, res, next) => {
   remove(+req.params.id);
-  res.send({message: 'Product removed'});
+  res.send({message: 'User removed'});
 })
 
 module.exports = router;
