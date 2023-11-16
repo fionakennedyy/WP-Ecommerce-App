@@ -1,131 +1,193 @@
+// @ts-check
 /**
- * @typedef {Object} User
- * @property {number} id - The user's ID.
- * @property {string} firstName - The user's first name.
- * @property {string} lastName - The user's last name.
- * @property {string} maidenName - The user's maiden name.
- * @property {number} age - The user's age.
- * @property {string} gender - The user's gender.
- * @property {string} email - The user's email address.
- * @property {string} phone - The user's phone number.
- * @property {string} username - The user's username.
- * @property {string} password - The user's password.
- * @property {string} birthDate - The user's date of birth.
- * @property {string} image - The user's profile image URL.
- * @property {string} bloodGroup - The user's blood group.
- * @property {number} height - The user's height in centimeters.
- * @property {number} weight - The user's weight in kilograms.
- * @property {string} eyeColor - The user's eye color.
- * @property {Object} hair - The user's hair details.
- * @property {string} hair.color - The color of the user's hair.
- * @property {string} hair.type - The type of the user's hair.
- * @property {string} domain - The user's domain.
- * @property {string} ip - The user's IP address.
- * @property {Object} address - The user's address details.
- * @property {string} address.address - The user's street address.
- * @property {string} address.city - The city where the user resides.
- * @property {Object} address.coordinates - The geographic coordinates of the user's location.
- * @property {number} address.coordinates.lat - The latitude of the user's location.
- * @property {number} address.coordinates.lng - The longitude of the user's location.
- * @property {string} address.postalCode - The postal code of the user's location.
- * @property {string} address.state - The state where the user resides.
- * @property {string} macAddress - The user's MAC address.
- * @property {string} university - The user's university.
- * @property {Object} bank - The user's bank details.
- * @property {string} bank.cardExpire - The expiration date of the user's bank card.
- * @property {string} bank.cardNumber - The user's bank card number.
- * @property {string} bank.cardType - The type of the user's bank card.
- * @property {string} bank.currency - The currency used for bank transactions.
- * @property {string} bank.iban - The user's IBAN (International Bank Account Number).
- * @property {Object} company - The user's company details.
- * @property {Object} company.address - The company's address details.
- * @property {string} company.address.address - The company's street address.
- * @property {string} company.address.city - The city where the company is located.
- * @property {Object} company.address.coordinates - The geographic coordinates of the company's location.
- * @property {number} company.address.coordinates.lat - The latitude of the company's location.
- * @property {number} company.address.coordinates.lng - The longitude of the company's location.
- * @property {string} company.address.postalCode - The postal code of the company's location.
- * @property {string} company.address.state - The state where the company is located.
- * @property {string} company.department - The user's department within the company.
- * @property {string} company.name - The name of the company.
- * @property {string} company.title - The user's job title within the company.
- * @property {string} ein - The user's Employer Identification Number (EIN).
- * @property {string} ssn - The user's Social Security Number (SSN).
- * @property {string} userAgent - The user's user agent string.
- */
+* @typedef {Object} Bank
+* @property {string} cardExpire
+* @property {string} cardNumber
+* @property {string} cardType
+* @property {string} currency
+* @property {string} iban
+*/
 
+/**
+* @typedef {Object} Coordinates
+* @property {number} lat
+* @property {number} lng
+*/
+
+/**
+* @typedef {Object} Address
+* @property {string} address
+* @property {string} [city]
+* @property {Coordinates} coordinates
+* @property {string} postalCode
+* @property {string} state
+*/
+
+/**
+* @typedef {Object} Company
+* @property {Address} address
+* @property {string} department
+* @property {string} name
+* @property {string} title
+*/
+
+/**
+* @typedef {Object} BaseUser
+* @property {string} firstName
+* @property {string} lastName
+* @property {string} maidenName
+* @property {number} age
+* @property {string} gender
+* @property {string} email
+* @property {string} phone
+* @property {string} username
+* @property {string} password
+* @property {string} birthDate
+* @property {string} image
+* @property {string} bloodGroup
+* @property {number} height
+* @property {string} macAddress
+* @property {string} university
+* @property {Bank} bank
+* @property {Company} company
+* @property {string} ein
+* @property {string} ssn
+* @property {string} userAgent
+*/
+
+/**
+* @typedef {Object} HasId
+* @property {number} id
+*/
+
+/**
+* @typedef {BaseUser & HasId} User
+*/
+
+/**
+* @type { {users: User[]} }
+*/
 const data = require("../data/users.json");
 
 /**
- * @returns {User[]} An array of users.
- */
+* @returns {User[]} An array of products.
+*/
 function getAll() {
     return data.users;
 }
 
 /**
- * @param {number} id - The user's ID.
- */
+* @param {number} id - The product's ID.
+*/
 function get(id) {
-    return data.users.find((user) => user.id === id);
+    const item = data.users.find(x => x.id === id);
+    if (!item) {
+        throw new Error('User not found');
+    }
+    return item
 }
 
-/*function getUsersByCategory(category) {
-  return data.users.filter((user) => user.category === category);
-}*/
-
 function search(query) {
-    return data.users.filter((user) => {
+    return data.users.filter(x => {
         return (
-            user.title.toLowerCase().includes(query.toLowerCase()) ||
-            user.description.toLowerCase().includes(query.toLowerCase())
+            x.firstName.toLowerCase().includes(query.toLowerCase()) ||
+            x.lastName.toLowerCase().includes(query.toLowerCase()) ||
+            x.email.toLowerCase().includes(query.toLowerCase()) ||
+            x.username.toLowerCase().includes(query.toLowerCase())
         );
     });
 }
 
-//CRUD: create read update delete
-
 /**
- * @param {User} user - user to create
- * @returns {User} - created user
- */
-function create(user) {
-    const newUser = {
+* @param {BaseUser} values - The user to create.
+* @returns {User} The created user.
+*/
+function create(values) {
+    const newItem = {
         id: data.users.length + 1,
-        ...user,
+        ...values,
     };
-    data.users.push(newUser);
-    return newUser;
+
+    data.users.push(newItem);
+    return newItem;
 }
 
 /**
- * @param {number} id - user's id'
- * @param {User} user - user's data
- * @returns {User} - updated user
- */
-function update(id, user) {
-    const index = data.users.findIndex((p) => p.id === user.id);
+* @param {BaseUser} values - The user to create.
+* @returns {User} The created user.
+*/
+function register(values) {
+    // register is like create but with validation
+    // and some extra logic
+
+    const exists = data.users.some(x => x.username === values.username);
+    if (exists) {
+        throw new Error('Username already exists');
+    }
+
+    if (values.password.length < 8) {
+        throw new Error('Password must be at least 8 characters');
+    }
+
+    // TODO: Make sure user is create with least privileges
+
+    const newItem = {
+        id: data.users.length + 1,
+        ...values,
+    };
+
+    data.users.push(newItem);
+    return newItem;
+
+}
+
+/**
+* @param {string} email
+* @param {string} password
+* @returns {User} The created user.
+*/
+function login(email, password) {
+
+    const item = data.users.find(x => x.email === email);
+    if (!item) {
+        throw new Error('User not found');
+    }
+
+    if (item.password !== password) {
+        throw new Error('Wrong password');
+    }
+
+    return item;
+}
+
+/**
+* @param {User} newValues - The user's new data.
+* @returns {User} The updated user.
+*/
+function update(newValues) {
+    const index = data.users.findIndex(p => p.id === newValues.id);
     if (index === -1) {
         throw new Error('User not found');
     }
     data.users[index] = {
         ...data.users[index],
-        ...user,
+        ...newValues,
     };
     return data.users[index];
 }
 
 /**
- * @param {number} id - user's id
- */
+* @param {number} id - The user's ID.
+*/
 function remove(id) {
-    const index = data.users.findIndex(p => p.id === id);
+    const index = data.users.findIndex(x => x.id === id);
     if (index === -1) {
         throw new Error('User not found');
     }
     data.users.splice(index, 1);
 }
 
+
 module.exports = {
-    getAll, get, search, create, update, remove
+    getAll, get, search, create, update, remove, login, register
 };
