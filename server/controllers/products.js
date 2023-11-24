@@ -1,62 +1,68 @@
-const express = require('express'); //cannot use async await with express
-const { getAll, get, search, create, update, remove } = require('../models/products');
+const express = require('express');
+const { getAll, get, search, create, update, remove, seed } = require('../models/products');
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
 
-    getAll()
+  getAll()
     .then((products) => {
       res.send(products);
     })
-    .catch(next) // one param: err
-    // .catch(err=> next(err)) same as line above
+    .catch(next)
+
 })
 
-.get('/search' , (req, res, next) => {
-
+  .get('/search', (req, res, next) => {
     search(req.query.q)
-    .then((results) => {
-      res.send(results);
-    }).catch(next);
-    
-    /* old: const results = search(req.query.q);
-    res.send(results);*/
-})
+      .then((results) => {
+        res.send(results);
+      }).catch(next);
 
-.get('/:id', (req, res, next) => {
-
-  get(+req.params.id)
-  .then((product) => {
-    if(product) {
-      res.send(product);
-    }
   })
-  const product = get(+req.params.id);
-  if(product) {
-    res.send( product );
-  }else {
-    res.status(404).send({error: 'Product not found'});
-  }
 
-})
+  .get('/:id', (req, res, next) => {
+    get(+req.params.id)
+      .then((product) => {
+        if (product) {
+          res.send(product);
+        } else {
+          res.status(404).send({ error: 'Product not found' });
+        }
+      }).catch(next);
 
-.post('/', (req, res, next) => {
-  // body exists bc we use the json parser
-  const product = create(req.body);
-  res.send(product);
-})
+  })
 
-.patch('/:id', (req, res, next) => {
-  const product = update(req.body);
-  res.send(product);
-})
+  .post('/', (req, res, next) => {
+    create(req.body)
+      .then((product) => {
+        res.send(product);
+      }).catch(next);
 
-.delete('/:id', (req, res, next) => {
-  remove(+req.params.id);
-  .then(() => {
-    res.send({message: 'Product removed'});
-  }).catch(next);
-  // old: res.send({message: 'Product removed'});
-})
+  })
+
+  .patch('/:id', (req, res, next) => {
+    req.body.id = +req.params.id;
+    update(req.body)
+      .then((product) => {
+        res.send(product);
+      }).catch(next);
+
+  })
+
+  .delete('/:id', (req, res, next) => {
+    remove(+req.params.id)
+      .then(() => {
+        res.send({ message: 'Product removed' });
+      }).catch(next);
+
+  })
+
+  .post('/seed', (req, res, next) => {
+    seed()
+      .then(() => {
+        res.send({ message: 'Products seeded' });
+      }).catch(next);
+
+  })
 
 module.exports = router;
