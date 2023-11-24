@@ -4,21 +4,26 @@ import { getProducts, type Product } from "@/model/products";
 import { addToCart } from "@/model/shoppingCart";
 
 const products = ref([] as Product[]);
-const isLoading = ref(false);
 
+getProducts().then((data) => {
+  products.value = data
+})
+
+/*const isLoading = ref(false);
 isLoading.value = true;
 //1000 returns the products 1000 miliseconds later (1 sec)
 setTimeout(() => {
   products.value = getProducts()
   isLoading.value = false;
 }, 1000)
+in html: <progress v-if="isLoading" class="progress is-success">Loading...</progress>
+*/
 
 </script>
 
 <template>
   <div>
     <h1 class="title">Product List</h1>
-    <progress v-if="isLoading" class="progress is-success">Loading...</progress>
 
     <div class="product-list">
       <div v-for="product in products" :key="product.id" class="product">

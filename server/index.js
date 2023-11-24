@@ -4,8 +4,6 @@ const userController = require('./controllers/users');
 const productController = require('./controllers/products');
 const app = express();
 
-const mongo = require('./models/mongo');
-
 const PORT = 3000;
 
 app
