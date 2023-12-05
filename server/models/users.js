@@ -1,87 +1,89 @@
 // @ts-check
 /**
-* @typedef {Object} Bank
-* @property {string} cardExpire
-* @property {string} cardNumber
-* @property {string} cardType
-* @property {string} currency
-* @property {string} iban
-*/
+ * @typedef {Object} Bank
+ * @property {string} cardExpire
+ * @property {string} cardNumber
+ * @property {string} cardType
+ * @property {string} currency
+ * @property {string} iban
+ */
 
 /**
-* @typedef {Object} Coordinates
-* @property {number} lat
-* @property {number} lng
-*/
+ * @typedef {Object} Coordinates
+ * @property {number} lat
+ * @property {number} lng
+ */
 
 /**
-* @typedef {Object} Address
-* @property {string} address
-* @property {string} [city]
-* @property {Coordinates} coordinates
-* @property {string} postalCode
-* @property {string} state
-*/
+ * @typedef {Object} Address
+ * @property {string} address
+ * @property {string} [city]
+ * @property {Coordinates} coordinates
+ * @property {string} postalCode
+ * @property {string} state
+ */
 
 /**
-* @typedef {Object} Company
-* @property {Address} address
-* @property {string} department
-* @property {string} name
-* @property {string} title
-*/
+ * @typedef {Object} Company
+ * @property {Address} address
+ * @property {string} department
+ * @property {string} name
+ * @property {string} title
+ */
 
 /**
-* @typedef {Object} BaseUser
-* @property {string} firstName
-* @property {string} lastName
-* @property {string} maidenName
-* @property {number} age
-* @property {string} gender
-* @property {string} email
-* @property {string} phone
-* @property {string} username
-* @property {string} password
-* @property {string} birthDate
-* @property {string} image
-* @property {string} bloodGroup
-* @property {number} height
-* @property {string} macAddress
-* @property {string} university
-* @property {Bank} bank
-* @property {Company} company
-* @property {string} ein
-* @property {string} ssn
-* @property {string} userAgent
-*/
+ * @typedef {Object} BaseUser
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} maidenName
+ * @property {number} age
+ * @property {string} gender
+ * @property {string} email
+ * @property {string} phone
+ * @property {string} username
+ * @property {string} password
+ * @property {string} birthDate
+ * @property {string} image
+ * @property {string} bloodGroup
+ * @property {number} height
+ * @property {string} macAddress
+ * @property {string} university
+ * @property {Bank} bank
+ * @property {Company} company
+ * @property {string} ein
+ * @property {string} ssn
+ * @property {string} userAgent
+ */
 
 /**
-* @typedef {Object} HasId
-* @property {number} id
-*/
+ * @typedef {Object} HasId
+ * @property {number} id
+ */
 
 /**
-* @typedef {BaseUser & HasId} User
-*/
+ * @typedef {BaseUser & HasId} User
+ */
 
 /**
-* @type { {users: User[]} }
-*/
+ * @type { {users: User[]} }
+ */
 const data = require("../data/users.json");
 
 const jwt = require('jsonwebtoken');
+
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
+
 /**
-* @returns {User[]} An array of products.
-*/
+ * @returns {User[]} An array of products.
+ */
 function getAll() {
     return data.users;
 }
 
 /**
-* @param {number} id - The product's ID.
-*/
+ * @param {number} id - The product's ID.
+ */
 function get(id) {
     const item = data.users.find(x => x.id === id);
     if (!item) {
@@ -102,9 +104,9 @@ function search(query) {
 }
 
 /**
-* @param {BaseUser} values - The user to create.
-* @returns {User} The created user.
-*/
+ * @param {BaseUser} values - The user to create.
+ * @returns {User} The created user.
+ */
 function create(values) {
     const newItem = {
         id: data.users.length + 1,
@@ -116,9 +118,9 @@ function create(values) {
 }
 
 /**
-* @param {BaseUser} values - The user to create.
-* @returns {User} The created user.
-*/
+ * @param {BaseUser} values - The user to create.
+ * @returns {User} The created user.
+ */
 function register(values) {
     // register is like create but with validation
     // and some extra logic
@@ -145,10 +147,10 @@ function register(values) {
 }
 
 /**
-* @param {string} email
-* @param {string} password
-* @returns { Promise< { user: User, token: string}> } The created user
-*/
+ * @param {string} email
+ * @param {string} password
+ * @returns { Promise< { user: User, token: string}> } The created user.
+ */
 async function login(email, password) {
 
     const item = data.users.find(x => x.email === email);
@@ -160,15 +162,15 @@ async function login(email, password) {
         throw new Error('Wrong password');
     }
 
-    const user = { ...item, password: undefined, };
+    const user = { ...item, password: undefined, admin: true };
     const token = await generateJWT(user);
     return { user, token };
 }
 
 /**
-* @param {User} newValues - The user's new data.
-* @returns {User} The updated user.
-*/
+ * @param {User} newValues - The user's new data.
+ * @returns {User} The updated user.
+ */
 function update(newValues) {
     const index = data.users.findIndex(p => p.id === newValues.id);
     if (index === -1) {
@@ -182,8 +184,8 @@ function update(newValues) {
 }
 
 /**
-* @param {number} id - The user's ID.
-*/
+ * @param {number} id - The user's ID.
+ */
 function remove(id) {
     const index = data.users.findIndex(x => x.id === id);
     if (index === -1) {
@@ -198,7 +200,7 @@ function generateJWT(user) {
             if (err) {
                 reject(err);
             } else {
-                resolve(user);
+                resolve(token);
             }
         });
     })
@@ -215,6 +217,7 @@ function verifyJWT(token) {
         });
     })
 }
+
 
 module.exports = {
     getAll, get, search, create, update, remove, login, register, generateJWT, verifyJWT
