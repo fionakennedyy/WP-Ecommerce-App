@@ -36,7 +36,7 @@ async function getAll() {
 async function get(id) {
   //
   const col = await getCollection();
-  return await col.findOne({ _id: ObjectID(id) }) // findOne returns a promise
+  return await col.findOne({ _id: ObjectID(id) }); // findOne returns a promise
   /* old: gets from JSON:
   return data.products.find((product) => product.id === id); */
 }
@@ -48,15 +48,15 @@ async function getByCategory(category) {
 }
 
 async function search(query) {
-  col = await getCollection();
+  const col = await getCollection();
   const products = await col.find({
     $or: [
-      { title: { $regex: query, $options: 'i' }}, // regular expressions
-      { description: ( $regex: query, $options: 'i' )},
+      { title: { $regex: query, $options: 'i' } },
+      { description: { $regex: query, $options: 'i' } },
     ],
   }).toArray();
-  return products;
 
+  return products;
 
   /*return data.products.filter((product) => {
     return (
@@ -93,7 +93,7 @@ async function create(product) {
 async function update(product) {
   const col = await getCollection();
   const result = await col.findOneAndUpdate( // 3 params:
-    { _id: ObjectID(product.id) },  // whats being updates
+    { _id: ObjectID(product.id) },  // whats being updated
     { $set: product },  // what are we changing
     { returnDocument: 'after' },  // optional options
   );

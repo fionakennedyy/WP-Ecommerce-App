@@ -18,10 +18,11 @@ const shouldDisplay = (task: { id?: number, text: string, completed: boolean }) 
   (tabState.value == 'Completed' && task.completed) ||
   tabState.value == 'All';
 
+/* display user list:
 const users = ref([] as User[] );
 getUsers().then((data) => {
   users.value = data;
-});
+});*/
 
 </script>
 
@@ -62,9 +63,10 @@ getUsers().then((data) => {
         </div>
       </div>
       
-      <div class="box" v-for="user in users" :key="user.id">
+      <!-- display user list:
+        <div class="box" v-for="user in users" :key="user.id">
         {{ user.firstName }} {{ user.lastName }}
-      </div>
+      </div>-->
     </div>
   </main>
 </template>
